@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script>
+      //Anchura imagen = 476, altura = 480
+      window.onload = function(){
+        var posX = 0;
+        var posY = 0;
+        var posXEnd = 28;
+        var posYEnd = 38;
+        var canvas = document.getElementById("lienzo");
+        var context = canvas.getContext("2d");
+        var imagen = new Image();
+        imagen.src = "./spritesheet.png";
+        imagen.onload = cargar;
+        var imagenGuardada;
+        function cargar() {
+          context.drawImage(imagen, 0, 0);
+          rectangulo(context);
+        };
+        function rectangulo(context){
+          recuadro(context);
+          recorte(context);
+        }
+        function recorte(){
+          context.drawImage(imagen, posX, posY, 28, 38, 476, 0, 56, 76);
+        }
+        function recuadro(context){
+          context.beginPath();
+          context.moveTo(posX,posY);
+          context.lineTo(posXEnd,posY);
+          context.lineTo(posXEnd,posYEnd);
+          context.lineTo(posX,posYEnd);
+          context.closePath();
+          context.strokeStyle = "#ff0000";
+          context.stroke();
+        }
+        function mover(x,y){
+          posX = x;
+          posY = y;
+          posXEnd = x+28;
+          posYEnd = y+38;
+          context.drawImage(imagen, 0, 0);
+          recuadro(context);
+          recorte();
+        }
+
+        document.addEventListener('keydown', (event) => {
+          const keyName = event.key;
+          if (event.ctrlKey) {
+            return;
+          } else {
+            if(keyName === "ArrowUp"){
+              event.preventDefault();
+              if(posY != 0){
+                posY = posY - 2;
+                rectangulo(context);
+                mover(posX,posY);
+              }
+            }else if(keyName === "ArrowDown"){
+              event.preventDefault();
+              if(posY != 480-38){
+                posY = posY + 2;
+                rectangulo(context);
+                mover(posX,posY);
+              }
+            }else if(keyName === "ArrowLeft"){
+              event.preventDefault();
+              if(posX != 0){
+                posX = posX - 2;
+                rectangulo(context);
+                mover(posX,posY);
+              }
+            }else if(keyName === "ArrowRight"){
+              event.preventDefault();
+              if(posX != 476-28){
+                posX = posX + 2;
+                rectangulo(context);
+                mover(posX,posY);
+              }
+            }
+          }
+        }, false);
+
+
+      }
+  </script>
+
+  </head>
+  <body>
+
+    <canvas id="lienzo" width="800" height="600"></canvas>
+    <input id="boton" type="button" value="Cambiar posicion cuadrado">
+  </body>
+</html>
